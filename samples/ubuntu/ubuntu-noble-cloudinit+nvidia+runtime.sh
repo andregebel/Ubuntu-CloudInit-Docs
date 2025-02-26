@@ -1,14 +1,14 @@
 #! /bin/bash
 
 VMID=8202
-STORAGE=local-zfs
+STORAGE=ssd1
 
 set -x
 rm -f noble-server-cloudimg-amd64+nivida.img
 wget -q https://cloud-images.ubuntu.com/noble/current/noble-server-cloudimg-amd64.img -O noble-server-cloudimg-amd64+nivida.img
-qemu-img resize noble-server-cloudimg-amd64.img 8G
+qemu-img resize noble-server-cloudimg-amd64.img 32G
 sudo qm destroy $VMID
-sudo qm create $VMID --name "ubuntu-noble-template-nvidia-runtime" --ostype l26 \
+sudo qm create $VMID --name "ubuntu-24.04.LTS-template-nvidia-runtime" --ostype l26 \
     --memory 1024 --balloon 0 \
     --agent 1 \
     --bios ovmf --machine q35 --efidisk0 $STORAGE:0,pre-enrolled-keys=0 \
@@ -33,7 +33,7 @@ runcmd:
 EOF
 
 sudo qm set $VMID --cicustom "vendor=local:snippets/ubuntu-noble-runtime.yaml"
-sudo qm set $VMID --tags ubuntu-template,noble,cloudinit,nvidia
+sudo qm set $VMID --tags ubuntu-template,noble,cloudinit,nvidia,24.04.LTS
 sudo qm set $VMID --ciuser $USER
 sudo qm set $VMID --sshkeys ~/.ssh/authorized_keys
 sudo qm set $VMID --ipconfig0 ip=dhcp

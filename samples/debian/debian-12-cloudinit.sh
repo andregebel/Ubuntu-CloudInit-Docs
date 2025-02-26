@@ -1,12 +1,12 @@
 #! /bin/bash
 
 VMID=8000
-STORAGE=local-zfs
+STORAGE=ssd1
 
 set -x
 rm -f debian-12-generic-amd64.qcow2
 wget -q https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-generic-amd64.qcow2
-qemu-img resize debian-12-generic-amd64.qcow2 8G
+qemu-img resize debian-12-generic-amd64.qcow2 32G
 sudo qm destroy $VMID
 sudo qm create $VMID --name "debian-12-template" --ostype l26 \
     --memory 1024 --balloon 0 \
