@@ -13,7 +13,6 @@ qemu-img resize debian-12-generic-amd64+docker.qcow2 32G
     --agent 1 \
     --bios ovmf --machine q35 --efidisk0 $STORAGE:0,pre-enrolled-keys=0 \
     --cpu x86-64-v2-AES --cores 1 --numa 1 \
-    --vga serial0 --serial0 socket  \
     --net0 virtio,bridge=vmbr0,mtu=1
  qm importdisk $VMID debian-12-generic-amd64+docker.qcow2 $STORAGE
  qm set $VMID --scsihw virtio-scsi-pci --virtio0 $STORAGE:vm-$VMID-disk-1,discard=on

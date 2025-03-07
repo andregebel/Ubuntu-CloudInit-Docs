@@ -13,7 +13,6 @@ qemu-img resize focal-server-cloudimg-amd64.img 32G
     --agent 1 \
     --bios ovmf --machine q35 --efidisk0 $STORAGE:0,pre-enrolled-keys=0 \
     --cpu host --socket 1 --cores 1 \
-    --vga serial0 --serial0 socket  \
     --net0 virtio,bridge=vmbr0
  qm importdisk $VMID focal-server-cloudimg-amd64.img $STORAGE
  qm set $VMID --scsihw virtio-scsi-pci --virtio0 $STORAGE:vm-$VMID-disk-1,discard=on
