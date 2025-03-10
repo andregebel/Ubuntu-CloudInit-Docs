@@ -1,0 +1,47 @@
+#! /bin/bash
+
+VMID=8001
+STORAGE=ssd1
+
+apt update -y && apt install libguestfs-tools -y
+cd /var/lib/vz/template/iso
+set -x
+rm -f debian-12-generic-amd64+docker.qcow2
+wget -q https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-generic-amd64.qcow2 -O debian-12-generic-amd64+docker.qcow2
+virt-customize -a /var/lib/vz/template/iso/debian-12-generic-amd64+docker.qcow2 --install qemu-guest-agent
+virt-customize -a /var/lib/vz/template/iso/debian-12-generic-amd64+docker.qcow2 --root-password password:Relation123!
+virt-customize -a /var/lib/vz/template/iso/debian-12-generic-amd64+docker.qcow2 --run-command "echo -n > /etc/machine-id"
+qemu-img resize debian-12-generic-amd64+docker.qcow2 8G
+ qm destroy $VMID
+ qm create $VMID --name "debian-12-template-docker" --ostype l26 \
+    --memory 2048 --balloon 0 \
+    --agent 1 \
+    --bios ovmf --machine q35 --efidisk0 $STORAGE:0,pre-enrolled-keys=0 \
+    --cpu x86-64-v2-AES --cores 2 --numa 1 \
+    --net0 virtio,bridge=vmbr0,mtu=1
+ qm importdisk $VMID debian-12-generic-amd64+docker.qcow2 $STORAGE
+ qm set $VMID --scsihw virtio-scsi-pci --virtio0 $STORAGE:vm-$VMID-disk-1,discard=on
+ qm set $VMID --boot order=virtio0
+ qm set $VMID --scsi1 $STORAGE:cloudinit
+
+#cat << EOF |  tee /mnt/pve/remote-nfs/snippets/debian-12-docker.yaml
+##cloud-config
+#runcmd:
+#    - apt-get update
+#    - apt-get install -y qemu-guest-agent gnupg
+#    - install -m 0755 -d /etc/apt/keyrings
+#    - curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+#    - chmod a+r /etc/apt/keyrings/docker.gpg
+#    - echo "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
+#    - apt-get update
+#    - apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+#    - reboot
+## Taken from https://forum.proxmox.com/threads/combining-custom-cloud-init-with-auto-generated.59008/page-3#post-428772
+#EOF
+##Custom Cloud Config switch
+# qm set $VMID --cicustom "vendor=remote-zfs:snippets/debian-12-docker.yaml"
+ qm set $VMID --tags debian-template,debian-12,cloudinit,docker
+ qm set $VMID --ciuser $USER
+ qm set $VMID --sshkeys ~/.ssh/authorized_keys
+ qm set $VMID --ipconfig0 ip=dhcp
+ qm template $VMID
