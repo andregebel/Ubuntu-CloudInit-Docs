@@ -1,6 +1,6 @@
 #! /bin/bash
 
-VMID=8202
+VMID=8199
 STORAGE=ssd1
 
 apt update -y && apt install libguestfs-tools -y
