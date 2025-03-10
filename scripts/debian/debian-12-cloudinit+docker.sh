@@ -24,22 +24,22 @@ qemu-img resize debian-12-generic-amd64+docker.qcow2 8G
  qm set $VMID --boot order=virtio0
  qm set $VMID --scsi1 $STORAGE:cloudinit
 
-#cat << EOF |  tee /mnt/pve/remote-nfs/snippets/debian-12-docker.yaml
-##cloud-config
-#runcmd:
-#    - apt-get update
-#    - apt-get install -y qemu-guest-agent gnupg
-#    - install -m 0755 -d /etc/apt/keyrings
-#    - curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
-#    - chmod a+r /etc/apt/keyrings/docker.gpg
-#    - echo "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
-#    - apt-get update
-#    - apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
-#    - reboot
-## Taken from https://forum.proxmox.com/threads/combining-custom-cloud-init-with-auto-generated.59008/page-3#post-428772
-#EOF
-##Custom Cloud Config switch
-# qm set $VMID --cicustom "vendor=remote-zfs:snippets/debian-12-docker.yaml"
+cat << EOF |  tee /mnt/pve/remote-nfs/snippets/debian-12-docker.yaml
+#cloud-config
+runcmd:
+    - apt-get update
+    - apt-get install -y qemu-guest-agent gnupg
+    - install -m 0755 -d /etc/apt/keyrings
+    - curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+    - chmod a+r /etc/apt/keyrings/docker.gpg
+    - echo "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
+    - apt-get update
+    - apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+    - reboot
+# Taken from https://forum.proxmox.com/threads/combining-custom-cloud-init-with-auto-generated.59008/page-3#post-428772
+EOF
+#Custom Cloud Config switch
+ qm set $VMID --cicustom "vendor=remote-zfs:snippets/debian-12-docker.yaml"
  qm set $VMID --tags debian-template,debian-12,cloudinit,docker
  qm set $VMID --ciuser $USER
  qm set $VMID --sshkeys ~/.ssh/authorized_keys

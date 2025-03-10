@@ -24,19 +24,20 @@ qemu-img resize noble-server-cloudimg-amd64.img 8G
  qm set $VMID --boot order=virtio0
  qm set $VMID --scsi1 $STORAGE:cloudinit
 
-#cat << EOF |  tee /var/lib/vz/snippets/ubuntu-noble-runtime.yaml
-##cloud-config
-#runcmd:
-#    - curl -fsSL https://nvidia.github.io/libnvidia-container/gpgkey | gpg --dearmor -o /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg
-#    - curl -s -L https://nvidia.github.io/libnvidia-container/stable/deb/nvidia-container-toolkit.list | sed 's#deb https://#deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg] https://#g' | tee /etc/apt/sources.list.d/nvidia-container-toolkit.list
-#    - apt-get update
-#    - apt-get install -y qemu-guest-agent nvidia-dkms-550-server nvidia-utils-550-server nvidia-container-runtime
-#    - systemctl enable ssh
-#    - reboot
-## Taken from https://forum.proxmox.com/threads/combining-custom-cloud-init-with-auto-generated.59008/page-3#post-428772
-#EOF
-#
-# qm set $VMID --cicustom "vendor=local:snippets/ubuntu-noble-runtime.yaml"
+cat << EOF |  tee /var/lib/vz/snippets/ubuntu-noble-runtime.yaml
+#cloud-config
+runcmd:
+    - curl -fsSL https://nvidia.github.io/libnvidia-container/gpgkey | gpg --dearmor -o /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg
+    - curl -s -L https://nvidia.github.io/libnvidia-container/stable/deb/nvidia-container-toolkit.list | sed 's#deb https://#deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg] https://#g' | tee /etc/apt/sources.list.d/nvidia-container-toolkit.list
+    - apt-get update
+    - apt-get install -y qemu-guest-agent nvidia-dkms-550-server nvidia-utils-550-server nvidia-container-runtime
+    - systemctl enable ssh
+    - reboot
+# Taken from https://forum.proxmox.com/threads/combining-custom-cloud-init-with-auto-generated.59008/page-3#post-428772
+EOF
+#Custom Cloud Config switch
+  qm set $VMID --cicustom "vendor=local:snippets/ubuntu-noble-runtime.yaml"
+ qm set $VMID --cicustom "vendor=local:snippets/ubuntu-noble-runtime.yaml"
  qm set $VMID --tags ubuntu-template,noble,cloudinit,nvidia,24.04.LTS
  qm set $VMID --ciuser $USER
  qm set $VMID --sshkeys ~/.ssh/authorized_keys
