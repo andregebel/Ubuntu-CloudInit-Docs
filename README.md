@@ -5,8 +5,8 @@ This is a short guide for setting up a Ubuntu VM template in Proxmox using Cloud
 For this guide I have made a few assumptions:
 
 * You want your VMs to boot via UEFI as opposed to BIOS
-* Your Proxmox node's main storage is called `local-zfs`
-* You want to use Ubuntu 24.04
+* Your Proxmox node's main storage is called `ssd1` like in the STORAGE Variable defined.
+* You want to use Ubuntu or Debian
 * You have SSH keys stored in ~/.ssh/authorized_keys of your regular user's home folder
 
 ## The basics
