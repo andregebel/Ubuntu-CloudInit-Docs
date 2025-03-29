@@ -84,6 +84,14 @@ In the samples folder I have included some pre-made shell scripts to create prox
 git clone https://github.com/andregebel/Ubuntu-CloudInit-Docs.git
 ```
 
+## Prepare the Authorized SSH Keys
+
+Paste your SSH Keys in the authorized_keys on the Proxmox Host. If not allready done.
+
+```
+ nano ~/.ssh/authorized_keys
+```
+
 # Change in the right directory
 
 ```
