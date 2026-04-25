@@ -4,7 +4,7 @@ This is a short guide for setting up Ubuntu VM templates in Proxmox using CloudI
 
 Supported releases:
 - **Ubuntu 24.04 LTS (Noble Numbat)**
-- **Ubuntu 26.04 LTS (Resolute Rampager)**
+- **Ubuntu 26.04 LTS (Resolute Raccoon)**
 
 For this guide I have made a few assumptions:
 
