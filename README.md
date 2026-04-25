@@ -18,14 +18,14 @@ For this guide I have made a few assumptions:
 
 ```bash
 export VMID=8200 STORAGE=local-zfs
-curl -fsSL https://raw.githubusercontent.com/jreverri/Ubuntu-CloudInit-Docs/main/samples/ubuntu/ubuntu-noble-cloudinit.sh | bash
+curl -fsSL https://raw.githubusercontent.com/UntouchedWagons/Ubuntu-CloudInit-Docs/main/samples/ubuntu/ubuntu-noble-cloudinit.sh | bash
 ```
 
 ### Ubuntu 26.04 (Resolute)
 
 ```bash
 export VMID=8200 STORAGE=local-zfs
-curl -fsSL https://raw.githubusercontent.com/jreverri/Ubuntu-CloudInit-Docs/main/samples/ubuntu/ubuntu-resolute-cloudinit.sh | bash
+curl -fsSL https://raw.githubusercontent.com/UntouchedWagons/Ubuntu-CloudInit-Docs/main/samples/ubuntu/ubuntu-resolute-cloudinit.sh | bash
 ```
 
 Other scripts are available in the [samples](./samples) directory, and can be used similarly to the above.
