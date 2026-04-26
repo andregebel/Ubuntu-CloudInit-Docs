@@ -9,7 +9,7 @@ Supported releases:
 For this guide I have made a few assumptions:
 
 * You want your VMs to boot via UEFI as opposed to BIOS
-* Your Proxmox node's main storage is called `local-zfs`
+* Your Proxmox node's main storage is called `ssd1`
 * You have SSH keys stored in ~/.ssh/authorized_keys of your regular user's home folder
 
 ## Quick start
@@ -17,14 +17,14 @@ For this guide I have made a few assumptions:
 ### Ubuntu 24.04 (Noble)
 
 ```bash
-export VMID=8200 STORAGE=local-zfs
+export VMID=8200 STORAGE=ssd1
 curl -fsSL https://raw.githubusercontent.com/UntouchedWagons/Ubuntu-CloudInit-Docs/main/samples/ubuntu/ubuntu-noble-cloudinit.sh | bash
 ```
 
 ### Ubuntu 26.04 (Resolute)
 
 ```bash
-export VMID=8200 STORAGE=local-zfs
+export VMID=8200 STORAGE=ssd1
 curl -fsSL https://raw.githubusercontent.com/UntouchedWagons/Ubuntu-CloudInit-Docs/main/samples/ubuntu/ubuntu-resolute-cloudinit.sh | bash
 ```
 
@@ -55,7 +55,7 @@ The next step is to create a basic VM that we'll build upon (substitute the imag
     sudo qm create 8001 --name "ubuntu-2604-cloudinit-template" --ostype l26 \
         --memory 1024 \
         --agent 1 \
-        --bios ovmf --machine q35 --efidisk0 local-zfs:0,pre-enrolled-keys=0 \
+        --bios ovmf --machine q35 --efidisk0 ssd1:0,pre-enrolled-keys=0 \
         --cpu host --sockets 1 --cores 1 \
         --vga serial0 --serial0 socket  \
         --net0 virtio,bridge=vmbr0
@@ -64,12 +64,12 @@ Feel free to change the 8001 to whatever you like, so long as you replace the 80
 
 ## Configuring hardware
 
-    sudo qm importdisk 8001 resolute-server-cloudimg-amd64.img local-zfs
-    sudo qm set 8001 --scsihw virtio-scsi-pci --virtio0 local-zfs:vm-8001-disk-1,discard=on
+    sudo qm importdisk 8001 resolute-server-cloudimg-amd64.img ssd1
+    sudo qm set 8001 --scsihw virtio-scsi-pci --virtio0 ssd1:vm-8001-disk-1,discard=on
     sudo qm set 8001 --boot order=virtio0
-    sudo qm set 8001 --scsi1 local-zfs:cloudinit
+    sudo qm set 8001 --scsi1 ssd1:cloudinit
 
-The first command imports the image we downloaded earlier; if your disk storage is not local-zfs (for example local-lvm) then replace it with whatever you wish. The next command attaches the disk to the VM. If your disk storage is not on SSDs (which it should be) omit `,discard=on`. The third command sets the boot order. The fourth adds the cloudinit pseudo-cdrom drive.
+The first command imports the image we downloaded earlier; if your disk storage is not ssd1 (for example local-lvm) then replace it with whatever you wish. The next command attaches the disk to the VM. If your disk storage is not on SSDs (which it should be) omit `,discard=on`. The third command sets the boot order. The fourth adds the cloudinit pseudo-cdrom drive.
 
 ## Creating the vendor.yaml file for cloudinit
 
@@ -126,6 +126,39 @@ In the [samples/ubuntu](./samples/ubuntu) folder are pre-made shell scripts to c
 > **Note on NVIDIA packages for 26.04:** The Resolute NVIDIA script uses `nvidia-dkms-590-server` and `nvidia-utils-590-server`, the same packages as Noble. Verify these are available in the Ubuntu 26.04 repos before running — check with `apt-cache search nvidia-dkms`.
 
 See the [samples/debian](./samples/debian) directory for equivalent Debian templates.
+
+
+## Clone repository
+
+```
+git clone https://github.com/andregebel/Ubuntu-CloudInit-Docs.git
+```
+
+## Prepare the Authorized SSH Keys
+
+Paste your SSH Keys in the authorized_keys on the Proxmox Host. If not allready done.
+
+```
+ nano ~/.ssh/authorized_keys
+```
+
+## Change in the right directory
+
+```
+cd /Ubuntu-CloudInit-Docs/samples/ubuntu
+```
+
+## Allow scripts to execute
+
+```
+chmod +x ./*.sh
+```
+
+## execute a script:
+
+```
+./ubuntu-jammy-cloudinit.sh
+```
 
 ## Thanks
 
