@@ -8,35 +8,35 @@ In this folder are a variety of scripts for setting up Debian VM templates.
 ### Basic Debian 12 "Bookworm" template
 
 ```sh
-$export VMID=8001 STORAGE=local-zfs
+$export VMID=8001 STORAGE=ssd1
 $curl -fsSL https://github.com/UntouchedWagons/Ubuntu-CloudInit-Docs/raw/refs/heads/main/samples/debian/debian-12-cloudinit.sh | bash
 ```
 
 ### Debian 12 "Bookworm" template with Docker auto-installed
 
 ```sh
-$export VMID=8002 STORAGE=local-zfs
+$export VMID=8002 STORAGE=ssd1
 $curl -fsSL https://github.com/UntouchedWagons/Ubuntu-CloudInit-Docs/raw/refs/heads/main/samples/debian/debian-12-cloudinit+docker.sh | bash
 ```
 
 ### Basic Debian 13 "Trixie" template
 
 ```sh
-$export VMID=8003 STORAGE=local-zfs
+$export VMID=8003 STORAGE=ssd1
 $curl -fsSL https://github.com/UntouchedWagons/Ubuntu-CloudInit-Docs/raw/refs/heads/main/samples/debian/debian-13-cloudinit.sh | bash
 ```
 
 ### Debian 13 "Trixie" template with Docker auto-installed
 
 ```sh
-$export VMID=8004 STORAGE=local-zfs
+$export VMID=8004 STORAGE=ssd1
 $curl -fsSL https://github.com/UntouchedWagons/Ubuntu-CloudInit-Docs/raw/refs/heads/main/samples/debian/debian-13-cloudinit+docker.sh | bash
 ```
 
 ### Debian 13 "Trixie" template with NVidia driver and container runtime auto-installed
 
 ```sh
-$export VMID=8005 STORAGE=local-zfs
+$export VMID=8005 STORAGE=ssd1
 $curl -fsSL https://github.com/UntouchedWagons/Ubuntu-CloudInit-Docs/raw/refs/heads/main/samples/debian/debian-13-cloudinit+nvidia.sh | bash
 ```
 
