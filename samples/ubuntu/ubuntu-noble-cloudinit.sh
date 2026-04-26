@@ -3,7 +3,7 @@
 set -xe
 
 VMID="${VMID:-8200}"
-STORAGE="${STORAGE:-local-zfs}"
+STORAGE="${STORAGE:-ssd1}"
 
 IMG="noble-server-cloudimg-amd64.img"
 BASE_URL="https://cloud-images.ubuntu.com/noble/current"
