@@ -3,7 +3,7 @@
 set -xe
 
 VMID="${VMID:-8000}"
-STORAGE="${STORAGE:-local-zfs}"
+STORAGE="${STORAGE:-ssd1}"
 
 IMG="debian-13-generic-amd64.qcow2"
 BASE_URL="https://cloud.debian.org/images/cloud/trixie/latest"
